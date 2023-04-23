@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-FrideApplication<fride>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.cit305.fride.fride.FrideApplication",
+            "projectName": "fride",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

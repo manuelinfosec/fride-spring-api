@@ -12,7 +12,7 @@ import com.cit305.fride.fride.User;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController {
 
+    // path to database file: JSON
     private static final String USERS_JSON_FILE = "users.json";
 
+    // initialize an object mapper
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private List<User> getUsersList() throws IOException {
@@ -33,39 +35,38 @@ public class AuthController {
             return new ArrayList<>();
         }
 
+        // return a list of user objects as collected from the database
         return objectMapper.readValue(file, new TypeReference<List<User>>() {
         });
     }
 
-    private boolean validateCredentials(String email, String password) throws IOException {
-        // Load the users from the JSON file
-        List<User> users = getUsersList();
-
-        for (User user : users) {
-            if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody Map<String, String> request) throws IOException {
+        
+        // collect login parameters
         String email = request.get("email");
         String password = request.get("password");
 
+        // collect every user from the database
         List<User> users = getUsersList();
 
+        // loop through all available users
         for (User user : users) {
+            // if any user matches the login parameters
             if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
+                // return details about the user
                 return ResponseEntity.ok(user);
             }
         }
+        // send back a response that the request user was not found
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody Map<String, String> request) throws IOException {
+
+        // collect request parameters
         String firstName = request.get("firstname");
         String lastName = request.get("lastname");
         String email = request.get("email");
@@ -87,9 +88,10 @@ public class AuthController {
         // Add new user to the list
         users.add(newUser);
 
-        // Write updated list back to file
+        // Write updated list back to database
         objectMapper.writeValue(new File(USERS_JSON_FILE), users);
-
+        
+        // return that details about new user
         return ResponseEntity.ok(newUser);
     }
 
