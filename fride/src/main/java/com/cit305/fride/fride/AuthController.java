@@ -1,5 +1,6 @@
 package com.cit305.fride.fride;
 
+import com.cit305.fride.fride.structs.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -7,8 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.cit305.fride.fride.User;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class AuthController {
     // initialize an object mapper
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private List<User> getUsersList() throws IOException {
+    public static List<User> getUsersList() throws IOException {
         // load file to memory
         File file = new File(USERS_JSON_FILE);
 

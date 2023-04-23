@@ -1,4 +1,4 @@
-package com.cit305.fride.fride;
+package com.cit305.fride.fride.structs;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
