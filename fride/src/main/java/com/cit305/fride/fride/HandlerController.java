@@ -1,11 +1,12 @@
 package com.cit305.fride.fride;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 // import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,34 +18,35 @@ import com.cit305.fride.fride.structs.User;
 public class HandlerController {
 
     @GetMapping("/dashboard")
-    public String dashboard(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> dashboard(@RequestBody Map<String, String> request) throws IOException {
 
-        try {
-            String email = request.get("email");
+        // collet request parameters
+        String email = request.get("email");
 
-            List<User> users = AuthController.getUsersList();
+        // collect every user from the database
+        List<User> users = AuthController.getUsersList();
 
-            JSONObject response = new JSONObject();
+        // create a response placeholder
+        Map<String, Object> response = new HashMap<>();
 
-            for (User user : users) {
-                if (user.getEmail().equals(email)) {
-                    response.put("fistName", user.getFirstName());
-                    response.put("bookedRides", 12);
+        // loop through all available users
+        for (User user : users) {
+            // if any user matches the email parameter
+            if (user.getEmail().equals(email)) {
+                // add user's firstname to response
+                response.put("fistName", user.getFirstName());
+                // add number of booked rides
+                response.put("bookedRides", 12);
 
-                    return response.toString();
-                }
+                // return response with 200 status code
+                return ResponseEntity.ok(response);
             }
-
-            response.put("error", "Email not found");
-            return response.toString();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-        return "";
+        // if no user matches, return error that email wasn't found
+        response.put("error", "Email not found");
+
+        // return error response with 404 status code
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }
